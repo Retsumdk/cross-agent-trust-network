@@ -1,14 +1,46 @@
-from cross_agent_trust_network import digest, normalize, run
+import pytest
 
-def test_normalize_deterministic():
-    assert normalize({'b': 1, 'a': 2}) == normalize({'a': 2, 'b': 1})
+from trust_network import TrustNetwork
 
-def test_digest_stable():
-    assert digest('x') == digest('x')
-    assert digest({'k': 'v'}) == digest({'k': 'v'})
 
-def test_run_shapes_result():
-    out = run({'hello': 'world'})
-    assert out['input_type'] == 'dict'
-    assert out['length'] > 0
-    assert len(out['digest']) == 64
+class Clock:
+    def __init__(self):
+        self.t = 100.0
+
+    def __call__(self):
+        return self.t
+
+
+def test_baseline_when_no_attestations():
+    c = Clock()
+    n = TrustNetwork(now=c)
+    assert n.score("alice") == 50.0
+
+
+def test_endorsement_raises_score():
+    c = Clock()
+    n = TrustNetwork(decay_halflife=100.0, now=c)
+    n.set_baseline("bob", 50.0)
+    n.endorse("carol", "bob", 100.0)
+    assert n.score("bob") > 50.0
+
+
+def test_old_endorsement_decays():
+    c = Clock()
+    n = TrustNetwork(decay_halflife=10.0, now=c)
+    n.set_baseline("bob", 50.0)
+    n.endorse("carol", "bob", 100.0)
+    fresh = n.score("bob")
+    c.t += 100  # ages the attestation well past halflife
+    stale = n.score("bob")
+    assert stale < fresh
+
+
+def test_issuers_listed_by_weight_desc():
+    c = Clock()
+    n = TrustNetwork(decay_halflife=10.0, now=c)
+    n.endorse("old", "target", 90.0)
+    c.t += 11
+    n.endorse("new", "target", 90.0)
+    issuers = n.issuers("target")
+    assert issuers[0][0] == "new"

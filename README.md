@@ -1,14 +1,12 @@
 # cross-agent-trust-network
 
-> A complete, tested utility for canonical hashing and digesting of JSON values.
+> Cross-agent trust network with signed attestations, time-based trust decay, and weighted trust scoring.
 
-A complete, tested building block for the Retsumdk ecosystem. Small surface, explicit behavior, zero hidden state — reviewed in minutes, trusted in production.
+### What it is
 
-## Features
+Cross-agent trust network with attestations, decay, and transitive scoring.
 
-- Deterministic, stable normalization of JSON-serializable input
-- SHA-256 digesting over a canonical form
-- Structured, validated result shape with a passing test suite
+Real, working Python for the Retsumdk ecosystem with an executable test suite.
 
 ## Getting started
 
