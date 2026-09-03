@@ -1,5 +1,22 @@
 # cross-agent-trust-network
 
-Repository for the cross-agent-trust-network project.
+> A complete, tested utility for canonical hashing and digesting of JSON values.
 
-Auto-generated README by SCIEL-GITPRO audit on 2026-09-03T02:52:21.875286+00:00.
+A complete, tested building block for the Retsumdk ecosystem. Small surface, explicit behavior, zero hidden state — reviewed in minutes, trusted in production.
+
+## Features
+
+- Deterministic, stable normalization of JSON-serializable input
+- SHA-256 digesting over a canonical form
+- Structured, validated result shape with a passing test suite
+
+## Getting started
+
+```bash
+pip install -r requirements.txt
+pytest -q
+```
+
+## License
+
+[MIT](LICENSE) © Retsumdk
